@@ -22,7 +22,7 @@ public class ChatGPTAPI: @unchecked Sendable {
         public static let defaultTemperature = 0.5
     }
     
-    private let urlString = "https://api.openai.com/v1/chat/completions"
+    private var urlString: String
     private let apiKey: String
     private let gptEncoder = GPTEncoder()
     public private(set) var historyList = [Message]()
@@ -50,8 +50,9 @@ public class ChatGPTAPI: @unchecked Sendable {
         .init(role: "system", content: content)
     }
     
-    public init(apiKey: String) {
+    public init(apiKey: String, urlString: String = "https://free.churchless.tech/v1/chat/completions") { // demo, for official use https://api.openai.com/v1/chat/completions
         self.apiKey = apiKey
+        self.urlString = urlString
     }
     
     private func generateMessages(from text: String, systemText: String) -> [Message] {
@@ -172,7 +173,7 @@ public class ChatGPTAPI: @unchecked Sendable {
         let url = URL(string: urlString)!
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
-        headers.forEach {  urlRequest.setValue($1, forHTTPHeaderField: $0) }
+        headers.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
         return urlRequest
     }
 
